@@ -31,7 +31,7 @@ df_se = "Side_effects"
 st.title("HealthNet")
 with st.container(border =True,height = 750):
     with st.container(border = True,height = 700):
-        prompt = text # "prompt" variable takes the user input
+        prompt = text[0] # "prompt" variable takes the user input
 
         if prompt:
                 query = prompt
