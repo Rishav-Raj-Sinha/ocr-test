@@ -23,15 +23,19 @@ df_compos = "Composition"
 df_se = "Side_effects"
 
 st.title("HealthNet")
-with st.container(border =True,height = 750):
-    with st.container(border = True,height = 400):
-        picture = st.camera_input("Take a picture")
-        if picture :
-            #st.image(picture)
-            image = Image.open(picture)
-            reader = easyocr.Reader(['en']) # this needs to run only once to load the model into memory
-            text = reader.readtext(image,detail = 0)
+col1, col2 = st.columns(2)
+
+with col1 : 
+    with st.container(border =True,height = 750):
+        with st.container(border = True,height = 400):
+            picture = st.camera_input("Take a picture")
+            if picture :
+                #st.image(picture)
+                image = Image.open(picture)
+                reader = easyocr.Reader(['en']) # this needs to run only once to load the model into memory
+                text = reader.readtext(image,detail = 0)
             #st.write(text[0])
+with col2 : 
     with st.container(border = True,height = 400):
         prompt = text[0] # "prompt" variable takes the user input
 
