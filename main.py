@@ -27,23 +27,30 @@ col1, col2 = st.columns(2)
 
 with col1 : 
     with st.container(border =True,height = 750):
-        with st.container(border = True,height = 400):
-            picture = st.camera_input("Take a picture")
+        with st.container(border = True,height = 620):
+            enable = st.checkbox("Enable camera or manually enter the name of prescribed medicine")
+            picture = st.camera_input("Take a picture", disabled=not enable)
             if picture :
                 #st.image(picture)
                 image = Image.open(picture)
                 reader = easyocr.Reader(['en']) # this needs to run only once to load the model into memory
                 text = reader.readtext(image,detail = 0)
             #st.write(text[0])
+            
+        with st.container(border = True,height = 75):
+            query = st.chat_input("Enter the name of your prescribed medicine") # "prompt" variable takes the user input
 with col2 : 
-    with st.container(border = True,height = 400):
-        prompt = text[0] # "prompt" variable takes the user input
+    with st.container(border =True,height = 750):
+      with st.container(border = True,height = 715):
+        if picture:
+            query = text[0] # "prompt" variable takes the user input
+        else:
+            query = query 
+        if query:
+            # query = prompt
+            match = process.extractOne(query, medicine_list)
 
-        if prompt:
-                query = prompt
-                match = process.extractOne(query, medicine_list)
-
-                if match:
+            if match:
                     best_match, score = match
 
                     matching_indices = data[data[df_name] == best_match].index.tolist()  # list of indices
@@ -55,10 +62,10 @@ with col2 :
                     usage = (data[df_usage][matching_index])
                     sideEffects = (data[df_se][matching_index])
                     input = st.chat_message("User")
-                    input.write(prompt )
+                    input.write(query )
                     output = st.chat_message("assistant")
                     output.write(f"Hello, the closest match to your medicine is {BestMatch} , it is used for {usage} , and has the following side effects : {sideEffects} , here are the composition(s) of your medicine {composition}") #this line gives the output that is generated using the llm
-                else:
+            else:
                     st.warning("no match found", icon="⚠️")
 
         
